@@ -67,7 +67,6 @@ export default {
         })
         .firstPage(function (err, records) {
           if (err) {
-            console.error(err);
             return;
           }
           records.forEach(record => {
