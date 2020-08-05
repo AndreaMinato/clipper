@@ -10,6 +10,7 @@
             <div class="ml-4 flex flex-shrink-0 items-center">
               <div class="flex items-center text-sm md:text-base">
                 <button
+                @click="save"
                   type="button"
                   class="inline-block rounded-lg font-medium leading-none py-2 px-3 focus:outline-none bg-indigo-50 text-indigo-700 bg-indigo-50 hover:bg-indigo-100"
                 >Save</button>
@@ -18,9 +19,9 @@
                 <div class="pl-4 pr-3 self-stretch">
                   <div class="h-full border-l border-gray-200"></div>
                 </div>
-                <button
+                <button v-show="supported"
                   type="button"
-                  @click="$refs.clipboardCode.select(); document.execCommand('copy')"
+                  @click="copy(clip)"
                   class="ml-3 text-gray-400 hover:text-gray-500"
                 >
                   <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
@@ -52,6 +53,7 @@
           <div class="flex flex-shrink-0 items-center">
             <div class="flex items-center text-sm md:text-base">
               <button
+              @click="save"
                 type="button"
                 class="inline-block rounded-lg font-medium leading-none py-2 px-3 focus:outline-none bg-indigo-50 text-indigo-700 bg-indigo-50 hover:bg-indigo-100"
               >Save</button>
@@ -60,9 +62,9 @@
               <div class="pl-4 pr-3 self-stretch">
                 <div class="h-full border-l border-gray-200"></div>
               </div>
-              <button
+              <button v-show="supported"
                 type="button"
-                @click="$refs.clipboardCode.select(); document.execCommand('copy')"
+                @click="copy(clip)"
                 class="ml-3 text-gray-400 hover:text-gray-500"
               >
                 <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
@@ -83,42 +85,78 @@
 
 <script>
 import { useClipper } from '../compositions/useAirtable.js';
+import { useClipboard } from '@vueuse/core';
 import { useRoute } from 'vue-router';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 export default {
   setup (porps, context) {
-    const { base, } = useClipper();
+    const { airtable: clips, } = useClipper('Clips');
     const { params, } = useRoute();
 
+    const { copy, supported, } = useClipboard();
+
     const clip = ref('');
-    base('Clips')
-      .select({
-        fields: [
-          'Name',
-          'Clip',
-        ],
-        filterByFormula: `({Name} = '${params.catchAll}')`,
-        maxRecords: 1,
-        view: 'List',
-      })
-      .firstPage(function (err, records) {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        if (records.length) {
-          const record = records[0];
+    const id = ref('');
 
-          //   console.log(
-          //     `Retrieved', ${record.get('Name')}: ${record.get('Clip')} `
-          //   );
-          clip.value = record.get('Clip');
-        } else {
-          //   console.log('No record found');
-        }
-      });
+    function getRecord () {
+      clips
+        .select({
+          fields: [
+            'Name',
+            'Clip',
+          ],
+          filterByFormula: `({Name} = '${params.catchAll}')`,
+          maxRecords: 1,
+          view: 'List',
+        })
+        .firstPage(function (err, records) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          if (records.length) {
+            const record = records[0];
+            clip.value = record.get('Clip');
+            id.value = record.id;
+          }
+        });
+    }
 
-    return { clip, params, };
+    function createRecord () {
+      clips.create([
+        {
+          fields: {
+            Name: params.catchAll,
+            Clip: clip.value,
+          },
+        },
+      ]);
+    }
+
+    function updateRecord () {
+      clips.update([
+        {
+          id: id.value,
+          fields: {
+            Name: params.catchAll,
+            Clip: clip.value,
+          },
+        },
+      ]);
+    }
+
+    function save () {
+      console.log(id, id.value);
+      if (id.value) {
+        updateRecord();
+      } else {
+        createRecord();
+      }
+    }
+
+    onMounted(() => { getRecord(); });
+
+    return { clip, params, copy, supported, save, };
   },
 };
 </script>
