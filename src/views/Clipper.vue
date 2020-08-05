@@ -111,7 +111,6 @@ export default {
         })
         .firstPage(function (err, records) {
           if (err) {
-            console.error(err);
             return;
           }
           if (records.length) {
@@ -148,7 +147,6 @@ export default {
     }
 
     function save () {
-      console.log(id, id.value);
       if (id.value) {
         updateRecord();
       } else {
