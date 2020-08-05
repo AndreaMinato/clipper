@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 sm:pt-1 lg:pt-12">
+
     <div class="bg-white overflow-hidden shadow rounded-lg">
       <div class="border-b border-gray-200 px-4 py-5 sm:px-6">
         <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-no-wrap">
@@ -80,7 +80,7 @@
         </div>
       </div>
     </div>
-  </div>
+
 </template>
 
 <script>
@@ -89,7 +89,7 @@ import { useClipboard } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
 export default {
-  setup (porps, context) {
+  setup () {
     const { airtable: clips, } = useClipper('Clips');
     const { params, } = useRoute();
 
@@ -128,6 +128,7 @@ export default {
           fields: {
             Name: params.catchAll,
             Clip: clip.value,
+            Updated: Date.now(),
           },
         },
       ]);
@@ -140,6 +141,7 @@ export default {
           fields: {
             Name: params.catchAll,
             Clip: clip.value,
+            Updated: Date.now(),
           },
         },
       ]);
