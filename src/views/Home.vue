@@ -21,7 +21,7 @@
             <div class="px-4 py-4 sm:px-6 grid grid-cols-6 gap-2 row-gap-5">
                 <router-link
                   :to="`/${Name}`"
-                  class="text-sm leading-5 font-medium text-indigo-600 truncate col-span-4"
+                  class="text-sm leading-5 font-medium text-indigo-600 truncate col-span-3"
                 >
                   {{ Name }}
                 </router-link>
@@ -36,12 +36,12 @@
                     leading-5
                     text-gray-500
                     sm:mt-0
-                    col-span-2
+                    col-span-3
 
                   "
                 >
                   <svg
-                    class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                    class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-300"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -52,7 +52,6 @@
                     />
                   </svg>
                   <span>
-                    Updated on
                     <time :datetime="Updated">{{ Updated }}</time>
                   </span>
               </div>
