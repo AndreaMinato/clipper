@@ -1,6 +1,6 @@
 <template>
-  <div id="app" class="bg-gray-50 min-h-screen">
-    <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 sm:pt-1 lg:pt-12">
+  <div  class="bg-gray-50 min-h-screen max-h-screen flex flex-col items-stretch">
+    <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 sm:pt-1 md:pt-4 lg:pt-12 flex flex-col items-stretch flex-1 overflow-y-auto">
       <router-view />
     </div>
   </div>
