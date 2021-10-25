@@ -79,12 +79,12 @@
 </template>
 
 <script>
-import { useClipper } from '../compositions/useAirtable.js';
+import { useClipBase } from '../compositions/useAirtable.js';
 import { onMounted, reactive } from 'vue';
 export default {
   name: 'Home',
   setup () {
-    const { airtable: clips, } = useClipper('Clips');
+    const { airtable: clips, } = useClipBase('Clips');
     const last = reactive([]);
 
     function getRecords () {

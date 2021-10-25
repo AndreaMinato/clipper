@@ -147,13 +147,13 @@
 </template>
 
 <script>
-import { useClipper } from '../compositions/useAirtable.js';
+import { useClipBase } from '../compositions/useAirtable.js';
 import { useClipboard } from '@vueuse/core';
 import { useRoute } from 'vue-router';
 import { ref, onMounted } from 'vue';
 export default {
   setup () {
-    const { airtable: clips, } = useClipper('Clips');
+    const { airtable: clips, } = useClipBase('Clips');
     const { params, } = useRoute();
 
     const { copy, supported, } = useClipboard();
